@@ -4,44 +4,51 @@ from typing import Optional, List
 from datetime import datetime, timezone
 import uuid
 
+
 class Event(SQLModel, table=True):
     __tablename__ = "events"
 
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
-    eventName: str
-    eventDescription: str
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    event_name: str
+    event_description: str
     owner: Optional[uuid.UUID] = Field(default=None, foreign_key="user_accounts.uid")
-    eventLocation: str
-    eventImage: Optional[str] = None
-    eventPrice: float
-    eventCapacity: int
-    eventDate: datetime
-    bookingStart: datetime
-    bookingEnd: datetime
-    timestamp: datetime
-    isCancelled: bool = False
+    event_location: str
+    event_image: Optional[str] = None
+    event_price: float
+    event_capacity: int
+    event_date: datetime
+    booking_start: datetime
+    booking_end: datetime
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    is_cancelled: bool = Field(default=False)
 
+    bookings: List["Booking"] = Relationship(back_populates="event")
+    tickets: List["Ticket"] = Relationship(back_populates="event")
 
 
 class Booking(SQLModel, table=True):
     __tablename__ = "bookings"
 
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
-    userId: Optional[uuid.UUID] = Field(default=None, foreign_key="user_accounts.uid")
-    eventId: Optional[str] = Field(default=None, foreign_key="events.id")  
-    ticketNumber: int
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    user_id: Optional[uuid.UUID] = Field(default=None, foreign_key="user_accounts.uid")
+    event_id: Optional[uuid.UUID] = Field(default=None, foreign_key="events.id")
+    ticket_id: Optional[uuid.UUID] = Field(default=None, foreign_key="tickets.id")
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+    event: Optional[Event] = Relationship(back_populates="bookings")
+    ticket: Optional["Ticket"] = Relationship(back_populates="booking")
 
 
 class Ticket(SQLModel, table=True):
     __tablename__ = "tickets"
 
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
-    eventId: Optional[str] = Field(default=None, foreign_key="events.id") 
-    ticketNumber: int
-    isBooked: bool = False
-    isPaid: bool = False
-    bookedBy: Optional[uuid.UUID] = Field(default=None, foreign_key="user_accounts.uid")
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    event_id: Optional[uuid.UUID] = Field(default=None, foreign_key="events.id")
+    ticket_number: int
+    is_booked: bool = Field(default=False)
+    is_paid: bool = Field(default=False)
+    booked_by: Optional[uuid.UUID] = Field(default=None, foreign_key="user_accounts.uid")
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-
+    event: Optional[Event] = Relationship(back_populates="tickets")
+    booking: Optional[Booking] = Relationship(back_populates="ticket")
