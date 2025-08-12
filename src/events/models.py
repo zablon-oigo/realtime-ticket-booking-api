@@ -3,7 +3,7 @@ from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List
 from datetime import datetime, timezone
 import uuid
-
+from ..auth import User
 
 class Event(SQLModel, table=True):
     __tablename__ = "events"
@@ -22,9 +22,9 @@ class Event(SQLModel, table=True):
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     is_cancelled: bool = Field(default=False)
 
+    owner_user: Optional[User] = Relationship(back_populates="events")
     bookings: List["Booking"] = Relationship(back_populates="event")
     tickets: List["Ticket"] = Relationship(back_populates="event")
-
 
 class Booking(SQLModel, table=True):
     __tablename__ = "bookings"
@@ -35,6 +35,7 @@ class Booking(SQLModel, table=True):
     ticket_id: Optional[uuid.UUID] = Field(default=None, foreign_key="tickets.id")
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
+    user: Optional[User] = Relationship(back_populates="bookings")
     event: Optional[Event] = Relationship(back_populates="bookings")
     ticket: Optional["Ticket"] = Relationship(back_populates="booking")
 
@@ -52,3 +53,4 @@ class Ticket(SQLModel, table=True):
 
     event: Optional[Event] = Relationship(back_populates="tickets")
     booking: Optional[Booking] = Relationship(back_populates="ticket")
+    booked_by_user: Optional[User] = Relationship(back_populates="tickets")
