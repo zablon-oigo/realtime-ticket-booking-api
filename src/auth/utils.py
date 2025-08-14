@@ -1,6 +1,7 @@
 import uuid
 import logging
 from datetime import datetime, timedelta
+from typing import Optional, Union
 
 import jwt
 from passlib.context import CryptContext
@@ -13,33 +14,32 @@ passwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 def generate_password_hash(password: str) -> str:
     return passwd_context.hash(password)
 
-def verify_password(password: str, hash: str) -> bool:
-    return passwd_context.verify(password, hash)
 
+def verify_password(password: str, hashed_password: str) -> bool:
+    return passwd_context.verify(password, hashed_password)
 
 
 def create_access_token(
     user_data: dict,
-    expiry: timedelta = None,
+    expiry: Optional[timedelta] = None,
     refresh: bool = False
 ) -> str:
-
+    expiry = expiry or timedelta(minutes=getattr(settings, "JWT_EXPIRY_MINUTES", 60))
     payload = {
         "user": user_data,
-        "exp": datetime.utcnow() + (expiry if expiry else timedelta(minutes=60)),
+        "exp": datetime.utcnow() + expiry,
         "jti": str(uuid.uuid4()),
         "refresh": refresh
     }
 
-    token = jwt.encode(
+    return jwt.encode(
         payload=payload,
         key=settings.JWT_SECRET,
         algorithm=settings.JWT_ALGORITHM
     )
 
-    return token
 
-def decode_token(token: str) -> dict | None:
+def decode_token(token: str) -> Optional[dict]:
     try:
         return jwt.decode(
             jwt=token,
@@ -48,10 +48,8 @@ def decode_token(token: str) -> dict | None:
         )
     except jwt.ExpiredSignatureError:
         logging.warning("Token expired.")
-        return None
-    except jwt.PyJWTError as jwte:
+    except jwt.InvalidTokenError as jwte:
         logging.error(f"JWT decode error: {jwte}")
-        return None
     except Exception as e:
         logging.error(f"Unexpected decode error: {e}")
-        return None
+    return None
