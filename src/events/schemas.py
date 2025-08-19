@@ -18,3 +18,11 @@ class EventBase(BaseModel):
     is_cancelled: bool = False
 
 
+class BookingBase(BaseModel):
+    event_id: uuid.UUID
+    ticket_id: Optional[uuid.UUID] = None
+
+
+class TicketBase(BaseModel):
+    event_id: uuid.UUID
+    ticket_number: int
