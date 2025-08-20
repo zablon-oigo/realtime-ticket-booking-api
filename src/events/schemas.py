@@ -45,4 +45,16 @@ class BookingCreate(BookingBase):
 
 
 class TicketCreate(TicketBase):
-    pass
+    pass 
+
+class EventUpdate(BaseModel):
+    event_name: Optional[str] = None
+    event_description: Optional[str] = None
+    event_location: Optional[str] = None
+    event_image: Optional[str] = None
+    event_price: Optional[float] = None
+    event_capacity: Optional[int] = None
+    event_date: Optional[datetime] = None
+    booking_start: Optional[datetime] = None
+    booking_end: Optional[datetime] = None
+    is_cancelled: Optional[bool] = None
