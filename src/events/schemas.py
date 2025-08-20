@@ -35,3 +35,14 @@ class TicketBase(BaseModel):
     event_id: uuid.UUID
     ticket_number: int 
 
+
+class EventCreate(EventBase):
+    pass
+
+
+class BookingCreate(BookingBase):
+    pass
+
+
+class TicketCreate(TicketBase):
+    pass
