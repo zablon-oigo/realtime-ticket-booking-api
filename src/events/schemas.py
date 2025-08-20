@@ -4,6 +4,14 @@ from typing import Optional, List
 from datetime import datetime
 import uuid
 
+class UserBase(BaseModel):
+    email: str
+    full_name: Optional[str] = None
+
+
+class UserRead(UserBase):
+    uid: uuid.UUID
+
 
 class EventBase(BaseModel):
     event_name: str
@@ -25,4 +33,5 @@ class BookingBase(BaseModel):
 
 class TicketBase(BaseModel):
     event_id: uuid.UUID
-    ticket_number: int
+    ticket_number: int 
+
