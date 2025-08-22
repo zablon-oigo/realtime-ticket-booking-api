@@ -57,4 +57,12 @@ class EventUpdate(BaseModel):
     event_date: Optional[datetime] = None
     booking_start: Optional[datetime] = None
     booking_end: Optional[datetime] = None
-    is_cancelled: Optional[bool] = None
+    is_cancelled: Optional[bool] = None 
+
+class TicketRead(TicketBase):
+    id: uuid.UUID
+    is_booked: bool
+    is_paid: bool
+    booked_by: Optional[uuid.UUID]
+    booked_by_user: Optional[UserRead] = None   
+    timestamp: datetime
