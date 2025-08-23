@@ -66,3 +66,11 @@ class TicketRead(TicketBase):
     booked_by: Optional[uuid.UUID]
     booked_by_user: Optional[UserRead] = None   
     timestamp: datetime
+
+class EventRead(EventBase):
+    id: uuid.UUID
+    owner: Optional[uuid.UUID]
+    owner_user: Optional[UserRead] = None      
+    timestamp: datetime
+    bookings: List[BookingRead] = []
+    tickets: List[TicketRead] = []
