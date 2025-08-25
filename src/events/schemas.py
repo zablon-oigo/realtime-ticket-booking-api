@@ -59,6 +59,15 @@ class EventUpdate(BaseModel):
     booking_end: Optional[datetime] = None
     is_cancelled: Optional[bool] = None 
 
+class BookingUpdate(BaseModel):
+    ticket_id: Optional[uuid.UUID] = None
+
+
+class TicketUpdate(BaseModel):
+    is_booked: Optional[bool] = None
+    is_paid: Optional[bool] = None
+    
+
 class TicketRead(TicketBase):
     id: uuid.UUID
     is_booked: bool
