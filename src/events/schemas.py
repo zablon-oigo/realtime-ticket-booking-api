@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
 import uuid
@@ -11,7 +11,6 @@ class UserBase(BaseModel):
 
 class UserRead(UserBase):
     uid: uuid.UUID
-
 
 class EventBase(BaseModel):
     event_name: str
@@ -33,8 +32,7 @@ class BookingBase(BaseModel):
 
 class TicketBase(BaseModel):
     event_id: uuid.UUID
-    ticket_number: int 
-
+    ticket_number: int
 
 class EventCreate(EventBase):
     pass
@@ -45,7 +43,7 @@ class BookingCreate(BookingBase):
 
 
 class TicketCreate(TicketBase):
-    pass 
+    pass
 
 class EventUpdate(BaseModel):
     event_name: Optional[str] = None
@@ -57,7 +55,7 @@ class EventUpdate(BaseModel):
     event_date: Optional[datetime] = None
     booking_start: Optional[datetime] = None
     booking_end: Optional[datetime] = None
-    is_cancelled: Optional[bool] = None 
+    is_cancelled: Optional[bool] = None
 
 class BookingUpdate(BaseModel):
     ticket_id: Optional[uuid.UUID] = None
@@ -66,7 +64,6 @@ class BookingUpdate(BaseModel):
 class TicketUpdate(BaseModel):
     is_booked: Optional[bool] = None
     is_paid: Optional[bool] = None
-    
 
 class TicketRead(TicketBase):
     id: uuid.UUID
@@ -81,14 +78,14 @@ class BookingRead(BookingBase):
     id: uuid.UUID
     user_id: uuid.UUID
     timestamp: datetime
-    user: Optional[UserRead] = None            
+    user: Optional[UserRead] = None             
     ticket: Optional[TicketRead] = None
 
 
 class EventRead(EventBase):
     id: uuid.UUID
     owner: Optional[uuid.UUID]
-    owner_user: Optional[UserRead] = None      
+    owner_user: Optional[UserRead] = None       
     timestamp: datetime
     bookings: List[BookingRead] = []
     tickets: List[TicketRead] = []
