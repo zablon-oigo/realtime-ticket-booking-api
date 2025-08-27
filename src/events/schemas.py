@@ -85,7 +85,7 @@ class BookingRead(BookingBase):
 class EventRead(EventBase):
     id: uuid.UUID
     owner: Optional[uuid.UUID]
-    owner_user: Optional[UserRead] = None       
+    owner_user: Optional[UserRead] = None
     timestamp: datetime
-    bookings: List[BookingRead] = []
-    tickets: List[TicketRead] = []
+    bookings: List[BookingRead] = Field(default_factory=list)
+    tickets: List[TicketRead] = Field(default_factory=list)
