@@ -19,3 +19,5 @@ logger = logging.getLogger(__name__)
 def generate_uuid() -> uuid.UUID:
     return uuid.uuid4()
 
+def current_timestamp() -> datetime:
+    return datetime.utcnow()
