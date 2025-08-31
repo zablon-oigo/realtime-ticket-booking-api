@@ -30,3 +30,12 @@ def create_event(
     timestamp = current_timestamp()
 
     logger.info(f"Creating new event: {event_data.event_name} ({event_id})")
+    return EventRead(
+        id=event_id,
+        owner=owner_id,
+        owner_user=None,
+        timestamp=timestamp,
+        bookings=[],
+        tickets=[],
+        **event_data.dict(),
+    )
