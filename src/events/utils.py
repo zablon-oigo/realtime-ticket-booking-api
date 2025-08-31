@@ -21,3 +21,12 @@ def generate_uuid() -> uuid.UUID:
 
 def current_timestamp() -> datetime:
     return datetime.utcnow()
+
+def create_event(
+    event_data: EventCreate,
+    owner_id: Optional[uuid.UUID] = None,
+) -> EventRead:
+    event_id = generate_uuid()
+    timestamp = current_timestamp()
+
+    logger.info(f"Creating new event: {event_data.event_name} ({event_id})")
